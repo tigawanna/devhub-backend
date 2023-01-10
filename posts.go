@@ -10,7 +10,7 @@ import (
 	"github.com/pocketbase/pocketbase/apis"
 )
 
-// CustomPostRoute defines the HTTP route for getting custom posts
+// CustomPostRoute  defines the HTTP route for getting custom posts
 func CustomPostRoute(app *pocketbase.PocketBase) echo.Route {
 	return echo.Route{
 		Method: http.MethodGet,
@@ -27,6 +27,8 @@ func CustomPostRoute(app *pocketbase.PocketBase) echo.Route {
 				Likes        int    `db:"likes" json:"likes"`
 				MyLike       string `db:"mylike" json:"mylike"`
 				ReactionId   string `db:"reaction_id" json:"reaction_id"`
+				Replies       int `db:"replies" json:"replies"`
+				MyReply   string `db:"myreply" json:"myreply"`
 			}{}
 			queryErr := app.Dao().DB().NewQuery(` 
 SELECT 
@@ -41,7 +43,11 @@ pp.created created_at,
 
 (SELECT COUNT(*) FROM reactions WHERE liked = 'yes' AND post = pp.id) likes,
 IFNULL((SELECT  liked FROM reactions WHERE user = {:user} AND post = pp.id),'virgin')mylike,
-IFNULL((SELECT id FROM reactions WHERE user = {:user} AND post = pp.id),"virgin") reaction_id
+IFNULL((SELECT id FROM reactions WHERE user = {:user} AND post = pp.id),"virgin") reaction_id,
+
+(SELECT COUNT(*) FROM replies WHERE post = pp.id) replies,
+IFNULL((SELECT  id FROM replies WHERE user = {:user}  AND post = pp.id),'virgin')myreply
+ 
 FROM posts pp
 LEFT JOIN devs dv on dv.id = pp.user
 WHERE (pp.created < {:created} OR (pp.created = {:created} AND pp.id < {:id}))

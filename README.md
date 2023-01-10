@@ -1,6 +1,6 @@
 # steps to recreate
 
-- clone your pockebase fork
+- clone your pocketbase fork
 ```sh
 git clone https://github.com/tigawanna/my-pocketbase-fork.git
 ```
