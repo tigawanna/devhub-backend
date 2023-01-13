@@ -11,7 +11,7 @@ import (
 )
 
 // CustomPostRoute  defines the HTTP route for getting custom posts
-func CustomPostRoute(app *pocketbase.PocketBase) echo.Route {
+func CustomPostsRoute(app *pocketbase.PocketBase) echo.Route {
 	return echo.Route{
 		Method: http.MethodGet,
 		Path:   "/custom_posts",

@@ -108,3 +108,83 @@ LIMIT 10
 
 ```
 </details>
+
+
+```sh
+/custom_posts
+```
+
+|query parameter|description|
+|----------------|----------|
+| user | logged in user id |
+|id | record id 
+| created   | SQLite date format  |
+
+
+The initial request requires 
+`user`: the logged in user id and `created`: the latest date the rest can be sent as empty strings 
+```js
+const currentdate = dayjs(new Date()).format("[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]")
+```
+
+
+returns
+```ts
+export interface CustomPostType {
+    creator_id: string;
+    creator_name: string;
+    creator_image: string;
+    post_id: string;
+    post_body: string;
+    post_media: string;
+    created_at: string;
+    likes: number;
+    mylike: "yes" | "no" | "virgin";
+    myreply: string | "virgin";
+    replies: number;
+    reaction_id: string;
+}
+```
+
+
+## custom replies endpoint
+
+```sh
+/custom_replies
+```
+Response
+```ts
+export interface Main {
+    creator_id:    string;
+    creator_name:  string;
+    creator_image: string;
+    op_post_id:    string;
+    reply_body:    string;
+    reply_media:   string;
+    replied_at:    Date;
+    reply_depth:   string;
+    replying_to:   string;
+    likes:         number;
+    mylike:        string;
+    reaction_id:   string;
+    replies:       number;
+    myreply:       string;
+}
+```
+
+|query parameter|description|
+|----------------|----------|
+| user | logged in user id |
+|id | record id 
+| created   | SQLite date format  |
+| parent    | reply id for the reply its nested under|
+| op | original post all the replies are on |
+
+
+
+The initial request requires 
+`user`: the logged in user id and `created`: the latest date the rest can be sent as empty strings 
+```js
+const currentdate = dayjs(new Date()).format("[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]")
+```
+
