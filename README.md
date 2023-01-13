@@ -1,4 +1,4 @@
-# steps to recreate
+# pocketbase as framework
 
 - clone your pocketbase fork
 ```sh
@@ -13,8 +13,7 @@ git clone https://github.com/tigawanna/my-pocketbase-fork.git
 go mod init "your new package name"
 go mod tidy
 ```
-## progress
-- added posts route 
+## custom posts route
 
 ```go
 main.go
@@ -145,6 +144,7 @@ export interface CustomPostType {
     reaction_id: string;
 }
 ```
+![custom_posts](https://user-images.githubusercontent.com/72096712/212390604-b102e1ef-346e-4bce-9d50-e12af309162c.png)
 
 
 ## custom replies endpoint
