@@ -53,16 +53,16 @@ pp.depth reply_depth,
 pp.parent replying_to,
 
 
-(SELECT COUNT(*) FROM reactions WHERE liked = 'yes' AND post = {:op} AND parent = pp.id) likes,
-IFNULL((SELECT  liked FROM reactions WHERE user = 'hj3t3v442wkxh8b' AND post = {:op} AND parent = pp.id),'virgin')mylike,
-IFNULL((SELECT id FROM reactions WHERE user = 'hj3t3v442wkxh8b' AND post = {:op} AND parent = pp.id),"virgin") reaction_id,
+(SELECT COUNT(*) FROM reply_reactions WHERE liked = 'yes' AND post = pp.id) likes,
+IFNULL((SELECT  liked FROM reply_reactions WHERE user = {:user} AND post = pp.id),'virgin')mylike,
+IFNULL((SELECT id FROM reply_reactions WHERE user = {:user} AND post = pp.id),"virgin") reaction_id,
 (SELECT COUNT(*) FROM replies WHERE post = pp.id) replies,
-IFNULL((SELECT  id FROM replies WHERE user = 'hj3t3v442wkxh8b' AND post = pp.id),'virgin')myreply
+IFNULL((SELECT id FROM replies WHERE user = {:user} AND post = pp.id),'virgin')myreply
 
 
 FROM replies pp
 LEFT JOIN devs dv on dv.id = pp.user
-LEFT join replies rep ON rep.post = {:op} AND rep.parent = pp.id
+LEFT JOIN replies rep on rep.post = pp.id 
 WHERE (
     (pp.created < {:created} OR 
     (pp.created = {:created} AND pp.id < {:id})) 
@@ -74,9 +74,9 @@ LIMIT 10
 `).Bind(dbx.Params{
 	"user": c.QueryParam("user"),
 	 "id": c.QueryParam("id"), 
-"created": c.QueryParam("created"),
+	"created": c.QueryParam("created"),
 	"op": c.QueryParam("op"),
-	 "parent": c.QueryParam("parent"), 
+	"parent": c.QueryParam("parent"), 
 
 }).All(&result)
 			if queryErr != nil {
