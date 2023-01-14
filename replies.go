@@ -53,16 +53,16 @@ pp.depth reply_depth,
 pp.parent replying_to,
 
 
-(SELECT COUNT(*) FROM reactions WHERE liked = 'yes' AND post = pp.id) likes,
-IFNULL((SELECT  liked FROM reactions WHERE user = 'hj3t3v442wkxh8b' AND post = pp.id),'virgin')mylike,
-IFNULL((SELECT id FROM reactions WHERE user = 'hj3t3v442wkxh8b' AND post = pp.id),"virgin") reaction_id,
+(SELECT COUNT(*) FROM reactions WHERE liked = 'yes' AND post = {:op} AND parent = pp.id) likes,
+IFNULL((SELECT  liked FROM reactions WHERE user = 'hj3t3v442wkxh8b' AND post = {:op} AND parent = pp.id),'virgin')mylike,
+IFNULL((SELECT id FROM reactions WHERE user = 'hj3t3v442wkxh8b' AND post = {:op} AND parent = pp.id),"virgin") reaction_id,
 (SELECT COUNT(*) FROM replies WHERE post = pp.id) replies,
 IFNULL((SELECT  id FROM replies WHERE user = 'hj3t3v442wkxh8b' AND post = pp.id),'virgin')myreply
 
 
 FROM replies pp
 LEFT JOIN devs dv on dv.id = pp.user
-LEFT join replies rep on rep.post = pp.id 
+LEFT join replies rep ON rep.post = {:op} AND rep.parent = pp.id
 WHERE (
     (pp.created < {:created} OR 
     (pp.created = {:created} AND pp.id < {:id})) 
