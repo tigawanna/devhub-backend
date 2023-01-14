@@ -100,7 +100,7 @@ and add the route in main.go
 ```
 Response
 ```ts
-export interface Main {
+export interface CusromRepliesType {
     creator_id:    string;
     creator_name:  string;
     creator_image: string;
