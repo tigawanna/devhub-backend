@@ -23,7 +23,7 @@ func CustomRepliesRoute(app *pocketbase.PocketBase) echo.Route {
 				CreatorName  string `db:"creator_name" json:"creator_name"`
 				CreatorImage string `db:"creator_image" json:"creator_image"`
 
-				OPPostId       string `db:"op_post_id" json:"op_post_id"`
+				ReplyId       string `db:"reply_id" json:"reply_id"`
 				ReplyBody     string `db:"reply_body" json:"reply_body"`
 				ReplyMedia    string `db:"reply_media" json:"reply_media"`
 
@@ -44,7 +44,7 @@ pp.user creator_id,
 dv.username creator_name,
 dv.avatar creator_image,
 
-pp.id op_post_id,
+pp.id reply_id,
 pp.body reply_body,
 pp.media reply_media,
 
