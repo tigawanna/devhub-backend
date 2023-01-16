@@ -18,21 +18,22 @@ func CustomRepliesRoute(app *pocketbase.PocketBase) echo.Route {
 		Method: http.MethodGet,
 		Path:   "/custom_replies",
 		Handler: func(c echo.Context) error {
+
 			result := []*struct {
 				CreatorId    string `db:"creator_id" json:"creator_id"`
 				CreatorName  string `db:"creator_name" json:"creator_name"`
 				CreatorImage string `db:"creator_image" json:"creator_image"`
 
-				ReplyId       string `db:"reply_id" json:"reply_id"`
-				ReplyBody     string `db:"reply_body" json:"reply_body"`
-				ReplyMedia    string `db:"reply_media" json:"reply_media"`
+				PostId       string `db:"post_id" json:"post_id"`
+				PostBody     string `db:"post_body" json:"post_body"`
+				PostMedia    string `db:"post_media" json:"post_media"`
+				PostParent    string `db:"post_parent" json:"post_parent"`
+				PostDepth    string `db:"post_depth" json:"post_depth"`
 
-				RepliedAT    string `db:"replied_at" json:"replied_at"`
-				ReplyDepth   string `db:"reply_depth" json:"reply_depth"`
-				ReplyingTo   string `db:"replying_to" json:"replying_to"`
-
+				CreatedAT    string `db:"created_at" json:"created_at"`
 				Likes        int    `db:"likes" json:"likes"`
 				MyLike       string `db:"mylike" json:"mylike"`
+				
 				ReactionId   string `db:"reaction_id" json:"reaction_id"`
 				Replies       int `db:"replies" json:"replies"`
 				MyReply   string `db:"myreply" json:"myreply"`
@@ -44,41 +45,37 @@ pp.user creator_id,
 dv.username creator_name,
 dv.avatar creator_image,
 
-pp.id reply_id,
-pp.body reply_body,
-pp.media reply_media,
+pp.id post_id,
+pp.body post_body,
+pp.media post_media,
+pp.created created_at,
+pp.depth post_depth,
+IFNULL(pp.parent,"op") parent,
 
-pp.created replied_at,
-pp.depth reply_depth,
-pp.parent replying_to,
+(SELECT COUNT(*) FROM reactions WHERE liked = 'yes' AND post = pp.id) likes,
+IFNULL((SELECT  liked FROM reactions WHERE user = {:user} AND post = pp.id),'virgin')mylike,
+IFNULL((SELECT id FROM reactions WHERE user = {:user} AND post = pp.id),"virgin") reaction_id,
 
-
-(SELECT COUNT(*) FROM reply_reactions WHERE liked = 'yes' AND post = pp.id) likes,
-IFNULL((SELECT  liked FROM reply_reactions WHERE user = {:user} AND post = pp.id),'virgin')mylike,
-IFNULL((SELECT id FROM reply_reactions WHERE user = {:user} AND post = pp.id),"virgin") reaction_id,
-(SELECT COUNT(*) FROM replies WHERE post = pp.id) replies,
-IFNULL((SELECT id FROM replies WHERE user = {:user} AND post = pp.id),'virgin')myreply
-
-
-FROM replies pp
+(SELECT COUNT(*) FROM posts WHERE parent = pp.id AND depth = pp.depth + 1) replies,
+IFNULL((SELECT  id FROM posts WHERE pp.user = {:user} AND parent = pp.id AND depth = pp.depth + 1 ),'virgin')myreply
+ 
+FROM posts pp
 LEFT JOIN devs dv on dv.id = pp.user
-LEFT JOIN replies rep on rep.post = pp.id 
 WHERE (
-    (pp.created < {:created} OR 
-    (pp.created = {:created} AND pp.id < {:id})) 
-    AND pp.post={:op} AND pp.parent = {:parent}
+    (pp.created < {:created} OR (pp.created = {:created} AND pp.id < {:id})) 
+    AND pp.depth={:depth} AND pp.parent ={:parent}
   )
 ORDER BY pp.created DESC, pp.id DESC
 LIMIT 10
 							
 `).Bind(dbx.Params{
-	"user": c.QueryParam("user"),
-	 "id": c.QueryParam("id"), 
-	"created": c.QueryParam("created"),
-	"op": c.QueryParam("op"),
-	"parent": c.QueryParam("parent"), 
-
+"user": c.QueryParam("user"), 
+"id": c.QueryParam("id"), 
+"created": c.QueryParam("created"),
+"depth": c.QueryParam("depth"),
+"parent": c.QueryParam("parent"),
 }).All(&result)
+
 			if queryErr != nil {
 				fmt.Print("\n")
 				return apis.NewBadRequestError("Failed to fetch custom replies ", queryErr)

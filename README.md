@@ -118,6 +118,12 @@ export interface CusromRepliesType {
 }
 ```
 
+
+
+
+## ⚠️⚠️
+this method of having separate tables for posts and replies is getting hard to implement especially with mutations and aggregated fields , will switch to making replies in the posts table but with different depth levels 
+
 |query parameter|description|
 |----------------|----------|
 | user | logged in user id |
@@ -133,5 +139,3 @@ The initial request requires
 ```js
 const currentdate = dayjs(new Date()).format("[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]")
 ```
-![custom_replies](https://user-images.githubusercontent.com/72096712/212390103-f2d11c83-34ef-4ed7-a6b6-78c5c9ffd12f.png)
-
