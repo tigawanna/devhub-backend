@@ -47,7 +47,7 @@ pp.body post_body,
 pp.media post_media,
 pp.created created_at,
 pp.depth post_depth,
-IFNULL(pp.parent,"op") parent,
+IFNULL(pp.parent,"op") post_parent,
 
 (SELECT COUNT(*) FROM reactions WHERE liked = 'yes' AND post = pp.id) likes,
 IFNULL((SELECT  liked FROM reactions WHERE user = {:user} AND post = pp.id),'virgin')mylike,
@@ -60,7 +60,8 @@ FROM posts pp
 LEFT JOIN devs dv on dv.id = pp.user
 WHERE (
     (pp.created < {:created} OR (pp.created = {:created} AND pp.id < {:id})) 
-    AND pp.depth={:depth} 
+    AND pp.depth={:depth}
+	AND (CASE WHEN {:profile} = 'general' THEN 1 ELSE pp.user = {:profile} END)
   )
 ORDER BY pp.created DESC, pp.id DESC
 LIMIT 10
@@ -70,7 +71,7 @@ LIMIT 10
 "id": c.QueryParam("id"), 
 "created": c.QueryParam("created"),
 "depth": c.QueryParam("depth"),
-"parent": c.QueryParam("parent"),
+"profile": c.QueryParam("profile"),
 }).All(&result)
 
 			if queryErr != nil {
