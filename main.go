@@ -1,6 +1,7 @@
 package main
 
 import (
+
 	"log"
 	"os"
 	"path/filepath"
@@ -55,7 +56,7 @@ func main() {
 	app.RootCmd.ParseFlags(os.Args[1:])
 
 	// ---------------------------------------------------------------
-	// Plugins and hooks:
+	// custom code Plugins and hooks:
 	// ---------------------------------------------------------------
 	// Define the custom post route
 	customPostsRoute := CustomPostsRoute(app)
@@ -66,6 +67,16 @@ func main() {
 
 		return nil
 	})
+    
+    //     app.OnRecordBeforeCreateRequest().Add(func(e *core.RecordCreateEvent) error {
+	// 	fmt.Println(" record before save ====>>>> ", e.Record)	
+    //     log.Println(e.Record) // still unsaved
+    //     return nil
+    // })
+
+	// ---------------------------------------------------------------
+	// custom code Plugins and hooks:
+	// ---------------------------------------------------------------
 
 	// load js pb_migrations
 	jsvm.MustRegisterMigrations(app, &jsvm.MigrationsOptions{
