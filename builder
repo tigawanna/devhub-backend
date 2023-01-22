@@ -26,7 +26,7 @@ echo "building executable for $platform"
     fi    
 
 
-    env GOOS=$GOOS GOARCH=$GOARCH go build -o $output_name *.go
+    env GOOS=$GOOS GOARCH=$GOARCH CGO_ENABLED=0 go build -o $output_name *.go
     if [ $? -ne 0 ]; then
            echo 'An error has occurred! Aborting the script execution...'
         exit 1

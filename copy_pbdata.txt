@@ -1,0 +1,118 @@
+# rsync -avz -e ssh pocketbase-custom/pb_data denniskinuthiaw@gmail.com@tigawanna-official-pocketbase.fly.dev: /
+
+
+# rsync -avz -e ssh pocketbase-custom/pb_data denniskinuthiaw@gmail.com@tigawanna-official-pocketbase.fly.dev:/pb/pb_data
+
+
+# rsync -avz -p 10022 -e ssh pocketbase-custom/pb_data root@localhost:/pb/pb_data
+
+
+# rsync -avz -e ssh /local/path/to/pocketbase root@YOUR_SERVER_IP:/opt/pocketbase/pocketbase
+
+
+
+# Official way 
+
+# FROM alpine:latest
+
+# ARG PB_VERSION=0.11.3
+
+# RUN apk add --no-cache \
+#     unzip \
+#     # this is needed only if you want to use scp to copy later your pb_data locally
+#     openssh
+
+# # download and unzip PocketBase
+# ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip /tmp/pb.zip
+# RUN unzip /tmp/pb.zip -d /pb/
+
+# EXPOSE 8080
+
+# # start PocketBase
+# CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
+
+
+
+
+
+
+
+# FROM alpine:latest
+
+# # ARG PB_VERSION=0.10.1
+
+# RUN apk add --no-cache \
+#     # unzip \
+#     # this is needed only if you want to use scp to copy later your pb_data locally
+#     openssh
+
+# # download and unzip PocketBase
+# ADD https://github.com/tigawanna/devhub-backend/blob/master/pocketbase /pb/pocketbase
+# # RUN unzip /tmp/pb.zip -d /pb/
+# RUN chmod 777 /pb/pocketbase
+# EXPOSE 8080
+
+
+# # start PocketBase
+# CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080"]
+
+
+
+
+# FROM alpine:latest
+
+# COPY  pocketbase .
+
+# RUN chmod +x pocketbase
+
+# EXPOSE 8080
+
+# # start PocketBase
+# CMD ["pocketbase", "serve", "--http=0.0.0.0:8080"]
+
+
+
+#  my custom
+
+# FROM alpine:latest
+
+# # Set the working directory
+# # WORKDIR /app
+
+# # Copy the custom binary to the container
+# COPY pocketbase .
+
+# # Make the binary executable
+# RUN chmod +x pocketbase
+
+# # Expose the necessary ports
+# EXPOSE 8080
+
+# # Run the binary when the container starts
+# CMD ["pocketbase", "serve", "--http=0.0.0.0:8080"]
+
+
+
+
+# BEN
+# FROM golang:1.19.5-alpine3.17
+
+# RUN apk add -v build-base
+# RUN apk add -v ca-certificates
+# RUN apk add --no-cache \
+#     unzip \
+#     openssh
+
+# WORKDIR /app
+
+# COPY go.mod go.sum ./
+
+# RUN go mod download
+
+# COPY *.go ./
+
+# RUN go build -o pb-build
+
+# EXPOSE 8080
+
+# CMD ["/app/pb-build", "serve", "--http=0.0.0.0:8080"]
