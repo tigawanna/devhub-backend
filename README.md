@@ -168,3 +168,5 @@ if it takes too long you can configure docker locally and use
 ```sh
 fly deploy --local-only 
 ```
+![fly_deploy](https://user-images.githubusercontent.com/72096712/213918782-fffdb8f0-1f55-4080-be46-22c9e2e110c3.png)
+
