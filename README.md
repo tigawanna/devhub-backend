@@ -150,6 +150,8 @@ fly launch
 ```
 ![fly launch](https://user-images.githubusercontent.com/72096712/213918321-0253f043-4f65-4838-a8f8-bf0d4c0c4814.png)
 
+then add this to the fly.toml
+
 ```toml
 [mounts]
   destination = "/pb/pb_data"
@@ -158,3 +160,11 @@ fly launch
 
 
 
+then you can run 
+```sh 
+fly deploy 
+```
+if it takes too long you can configure docker locally and use
+```sh
+fly deploy --local-only 
+```
