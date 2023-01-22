@@ -1,4 +1,4 @@
-# fly.toml file generated for tigawanna-official-pocketbase on 2023-01-21T16:53:28+03:00
+# fly.toml file generated for tigawanna-pocketbase on 2023-01-22T16:01:03+03:00
 
 app = "tigawanna-pocketbase"
 kill_signal = "SIGINT"

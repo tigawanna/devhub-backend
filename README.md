@@ -139,3 +139,20 @@ The initial request requires
 ```js
 const currentdate = dayjs(new Date()).format("[YYYYescape] YYYY-MM-DDTHH:mm:ssZ[Z]")
 ```
+
+## deploying to fly.io
+
+Add a [Dockerfile](Dockerfile)
+
+run 
+```sh
+fly launch
+```
+
+```toml
+[mounts]
+  destination = "/pb/pb_data"
+  source = "pb_data"
+```
+
+
