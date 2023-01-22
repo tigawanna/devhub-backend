@@ -148,11 +148,13 @@ run
 ```sh
 fly launch
 ```
+![fly launch](https://user-images.githubusercontent.com/72096712/213918321-0253f043-4f65-4838-a8f8-bf0d4c0c4814.png)
 
 ```toml
 [mounts]
   destination = "/pb/pb_data"
   source = "pb_data"
 ```
+
 
 
