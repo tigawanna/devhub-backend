@@ -61,9 +61,11 @@ func main() {
 	// Define the custom post route
 	customPostsRoute := CustomPostsRoute(app)
 	customRepliesRoute := CustomRepliesRoute(app)
+	customOnePostRoute := CustomOnePostRoute(app)
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		e.Router.AddRoute(customPostsRoute)
 		e.Router.AddRoute(customRepliesRoute)
+		e.Router.AddRoute(customOnePostRoute)
 
 		return nil
 	})

@@ -69,7 +69,7 @@ WHERE (
 
   )
 ORDER BY pp.created DESC, pp.id DESC
-LIMIT 10
+LIMIT {:limit}
 							
 `).Bind(dbx.Params{
 "user": c.QueryParam("user"), 
@@ -78,6 +78,7 @@ LIMIT 10
 "depth": c.QueryParam("depth"),
 "parent": c.QueryParam("parent"),
 "profile": c.QueryParam("profile"),
+"limit": c.QueryParam("limit"), 
 }).All(&result)
 
 			if queryErr != nil {

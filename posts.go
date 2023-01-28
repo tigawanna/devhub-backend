@@ -64,7 +64,7 @@ WHERE (
 	AND (CASE WHEN {:profile} = 'general' THEN 1 ELSE pp.user = {:profile} END)
   )
 ORDER BY pp.created DESC, pp.id DESC
-LIMIT 10
+LIMIT {:limit}
 							
 `).Bind(dbx.Params{
 "user": c.QueryParam("user"), 
@@ -72,6 +72,7 @@ LIMIT 10
 "created": c.QueryParam("created"),
 "depth": c.QueryParam("depth"),
 "profile": c.QueryParam("profile"),
+"limit": c.QueryParam("limit"), 
 }).All(&result)
 
 			if queryErr != nil {
